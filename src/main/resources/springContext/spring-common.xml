@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+	<util:map id="codeMap" map-class="java.util.HashMap">
+		<entry key="100" value="用户名或密码错误" />
+		<entry key="101" value="非法操作" />
+	<!-- 全局返回码 -->
+		<entry key="200" value="请求成功" />
+		<entry key="201" value="余额不足,操作失败" />
+		<entry key="300" value="签名失败" />
+		<entry key="400" value="参数不能为空" />
+	<!-- 统一扫码 -->
+		<entry key="410" value="不属于该店铺" />
+		<entry key="420" value="二维码错误" />
+		<entry key="430" value="定位失败" />
+		<entry key="440" value="你已经兑换了该积分商品" />
+		<entry key="450" value="核销失败" />
+		<entry key="500" value="请求异常" />
+		<entry key="505" value="数据入库失败" />
+		<entry key="506" value="校验TOKEN失效,请重新登录" />
+		<entry key="510" value="请求数据为空" />
+		<entry key="506" value="校验TOKEN失效,请重新登录" />
+		<entry key="600" value="用户名已注册" />
+		<entry key="700" value="登录用户名或密码错误" />
+		<entry key="701" value="该会员不存在" />
+		<entry key="702" value="该用户的登录次数已达到上限,冻结1天" />
+		<entry key="703" value="旧密码不正确" />
+	<!-- 客户端发送短信验证返回码 -->
+		<entry key="1000" value="发送验证码成功" />
+		<entry key="1001" value="该手机号码获取注册验证码次数达到上限" />		<!-- 上限：5次(2小时后可再次进行注册) -->
+		<entry key="1003" value="客户端登录Token验证错误" />
+		<entry key="1005" value="该手机号码已被注册" />
+		<entry key="1006" value="发送验证码出错(服务器出现异常)" />
+		<entry key="1007" value="该手机号码未被注册" />
+	<!-- 支付交易返回码 -->
+		<entry key="2001" value="该订单为其他商户生成,无法执行此操作" />
+		<entry key="2002" value="无效的订单号：out_trade_no" />
+		<entry key="2003" value="无效的导购ID:userId" />
+		<entry key="2004" value="该订单无法执行提货操作" />
+		<entry key="2005" value="该订单无法执行退货退款操作" />
+	</util:map>
+
+
+	<util:map id="commonMap" map-class="java.util.HashMap">
+	</util:map>
+	
+</beans>        

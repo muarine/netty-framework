@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/tx 
+           http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+           http://www.springframework.org/schema/aop
+		   http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+
+
+	<!-- 采用AOP拦截的方式实现事务管理 -->
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="transacationPointcut" expression="execution(* com.rtmap.*.service.*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="transacationPointcut"/>
+	</aop:config>
+      
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+     <tx:attributes>
+      <tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" no-rollback-for="java.lang.RuntimeException"/>
+      <tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="Exception" />
+      <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" />
+      <tx:method name="find*" propagation="SUPPORTS"/>
+      <tx:method name="get*" propagation="SUPPORTS"/>
+      <tx:method name="select*" propagation="SUPPORTS"/> 
+    </tx:attributes>
+   </tx:advice>
+</beans>

@@ -24,6 +24,10 @@
 		<mybatis.spring.version>1.2.2</mybatis.spring.version>
 		<mysql.connector.version>5.1.29</mysql.connector.version>
 		<jackson.version>2.5.2</jackson.version>
+		
+		<commons-logging>1.2</commons-logging>
+		<tomcat-jdbc>7.0.62</tomcat-jdbc>
+		<servlet-api>7.0.62</servlet-api>
 	</properties>
 
 	<dependencies>
@@ -71,20 +75,35 @@
 			<artifactId>mybatis</artifactId>
 			<version>${mybatis.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
 			<version>${mybatis.spring.version}</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.connector.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jdbc</artifactId>
+			<version>${tomcat-jdbc}</version>
+		</dependency>
+		<!-- common-utils -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons-logging}</version>
+		</dependency>
+		
+		<!-- servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>3.0-alpha-1</version>
+		</dependency>
+		
 		<!-- junit -->
 		<dependency>
 			<groupId>junit</groupId>
