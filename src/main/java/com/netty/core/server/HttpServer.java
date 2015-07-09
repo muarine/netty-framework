@@ -1,7 +1,5 @@
 package com.netty.core.server;
 
-import javax.net.ssl.SSLEngine;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -12,7 +10,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
-import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 
 import org.slf4j.Logger;
@@ -42,7 +39,6 @@ public class HttpServer {
 			b.group(bossGroup,workGroup)
 							.channel(NioServerSocketChannel.class)
 							.childHandler(new ChannelInitializer<SocketChannel>() {
-								
 								@Override
 				                 public void initChannel(SocketChannel ch) throws Exception {
 									// Uncomment the following line if you want HTTPS
@@ -59,8 +55,8 @@ public class HttpServer {
 				                    ch.pipeline().addLast(new DiscardServerHandler());
 				
 				                 }
-
-							}).option(ChannelOption.SO_BACKLOG, 128)
+							})
+							.option(ChannelOption.SO_BACKLOG, 128)
 							.childOption(ChannelOption.SO_KEEPALIVE, true);
 			
 			// Bind and start to accept incoming connections.
