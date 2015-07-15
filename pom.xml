@@ -27,7 +27,7 @@
 		
 		<commons-logging>1.2</commons-logging>
 		<tomcat-jdbc>7.0.62</tomcat-jdbc>
-		<servlet-api>7.0.62</servlet-api>
+		<servlet-api>3.1.0</servlet-api>
 	</properties>
 
 	<dependencies>
@@ -66,7 +66,13 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
-			<scope>test</scope>
+		</dependency>
+		
+		<!-- jackson -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<version>${jackson.version}</version>
 		</dependency>
 		
 		<!-- mybatis -->
@@ -100,8 +106,8 @@
 		<!-- servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>3.0-alpha-1</version>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet-api}</version>
 		</dependency>
 		
 		<!-- junit -->
@@ -109,7 +115,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 		
 		<!-- log4j -->

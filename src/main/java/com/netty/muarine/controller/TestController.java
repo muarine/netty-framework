@@ -8,8 +8,19 @@
 */
 package com.netty.muarine.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.netty.muarine.dao.UserMapper;
+import com.netty.muarine.entity.User;
+import com.netty.muarine.service.UserService;
 /**
  * 
  * TestController.
@@ -17,10 +28,26 @@ import org.slf4j.LoggerFactory;
  * @author Muarine maoyun@rtmap.com
  * @since 0.1
  */
-public class TestController {
+@ControllerAdvice
+@RestController()
+@RequestMapping("/")
+public class TestController extends BaseController{
 	
-	Logger log = LoggerFactory.getLogger("KECHUAN_FILE");
+	Logger log = LoggerFactory.getLogger(TestController.class);
 	
+	@RequestMapping("/foo")
+	public Map<String,Object> handleFoo() {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("map", "hexuan");
+		log.debug("foo");
+		return map;
+	}
+	
+	@RequestMapping("/")
+	public String index() {
+		log.debug("index");
+		return "Hello world";
+	}
 	
 	
 	

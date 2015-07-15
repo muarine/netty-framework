@@ -7,18 +7,40 @@
  */
 package com.netty.core.server;
 
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
-import io.netty.util.ReferenceCountUtil;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.stream.ChunkedStream;
+import io.netty.util.CharsetUtil;
 
-import java.net.SocketAddress;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map.Entry;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
 
 /**
  * DiscardServerHandler.
@@ -27,145 +49,129 @@ import org.slf4j.LoggerFactory;
  * @date 2015年7月9日
  * @since 2.0
  */
-public class DiscardServerHandler implements ChannelHandler {
+public class DiscardServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 	
 	Logger log = LoggerFactory.getLogger(DiscardServerHandler.class);
 	
+	private final Servlet servlet;
 	
-	@Override
-	public void bind(ChannelHandlerContext ctx, SocketAddress arg1,
-			ChannelPromise arg2) throws Exception {
-		// FIXME implement me
-	}
-
+	private final ServletContext servletContext;
+	
 	/**
-	 * TIME协议(时间协议的服务) 忽略任何接收到的数据,而只是在连接被创建发送一个消息
+	 * Create a new DiscardServerHandler.
+	 * 
 	 */
-	@Override
-	public void channelActive(final ChannelHandlerContext ctx) throws Exception {
-
-		final ByteBuf time = ctx.alloc().buffer(4); // (2)
-		time.writeInt((int) (System.currentTimeMillis() / 1000L + 2208988800L));
-
-		final ChannelFuture f = ctx.writeAndFlush(time); // (3)
-		f.addListener(new ChannelFutureListener() {
-			@Override
-			public void operationComplete(ChannelFuture future) {
-				assert f == future;
-				ctx.close();
-			}
-		}); // (4)
+	public DiscardServerHandler(Servlet servlet) {
+		this.servlet = servlet;
+		this.servletContext = servlet.getServletConfig().getServletContext();
 	}
 
 	@Override
-	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		// FIXME implement me
-	}
-
-	/**
-	 * 在数据被接收的时候调用
-	 */
-	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg)
-			throws Exception {
-
-		ByteBuf in = (ByteBuf) msg;
-		try {
-			while (in.isReadable()) { // (1)
-				System.out.print((char) in.readByte());
-				System.out.flush();
-			}
-		} finally {
-			ReferenceCountUtil.release(msg); // (2)
+	protected void messageReceived(ChannelHandlerContext channelHandlerContext,
+			FullHttpRequest fullHttpRequest) throws Exception {
+		
+		if (!fullHttpRequest.decoderResult().isSuccess()) {
+			sendError(channelHandlerContext, BAD_REQUEST);
+			return;
 		}
 
-	}
+		MockHttpServletRequest servletRequest = createServletRequest(fullHttpRequest);
+		MockHttpServletResponse servletResponse = new MockHttpServletResponse();
 
-	@Override
-	public void channelReadComplete(ChannelHandlerContext ctx)
-			throws Exception {
-		// FIXME implement me
-	}
+		this.servlet.service(servletRequest, servletResponse);
 
-	@Override
-	public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-		// FIXME implement me
-	}
+		HttpResponseStatus status = HttpResponseStatus.valueOf(servletResponse.getStatus());
+		HttpResponse response = new DefaultHttpResponse(HTTP_1_1, status);
 
-	@Override
-	public void channelUnregistered(ChannelHandlerContext ctx)
-			throws Exception {
-		// FIXME implement me
-	}
+		for (String name : servletResponse.getHeaderNames()) {
+			for (Object value : servletResponse.getHeaderValues(name)) {
+				System.out.println(name + "---" + value);
+				response.headers().addObject((CharSequence)name, value);
+			}
+		}
 
-	@Override
-	public void channelWritabilityChanged(ChannelHandlerContext ctx)
-			throws Exception {
-		// FIXME implement me
-	}
+		// Write the initial line and the header.
+		channelHandlerContext.write(response);
 
-	@Override
-	public void close(ChannelHandlerContext ctx, ChannelPromise arg1)
-			throws Exception {
-		// FIXME implement me
-	}
+		InputStream contentStream = new ByteArrayInputStream(servletResponse.getContentAsByteArray());
 
-	@Override
-	public void connect(ChannelHandlerContext ctx, SocketAddress arg1,
-			SocketAddress arg2, ChannelPromise arg3) throws Exception {
-		// FIXME implement me
+		// Write the content and flush it.
+		ChannelFuture writeFuture = channelHandlerContext.writeAndFlush(new ChunkedStream(contentStream));
+		writeFuture.addListener(ChannelFutureListener.CLOSE);
+		
 	}
+	
+	private MockHttpServletRequest createServletRequest(FullHttpRequest fullHttpRequest) {
+		UriComponents uriComponents = UriComponentsBuilder.fromUriString(fullHttpRequest.uri()).build();
 
-	@Override
-	public void deregister(ChannelHandlerContext ctx, ChannelPromise arg1)
-			throws Exception {
-		// FIXME implement me
-	}
+		MockHttpServletRequest servletRequest = new MockHttpServletRequest(this.servletContext);
+		servletRequest.setRequestURI(uriComponents.getPath());
+		servletRequest.setPathInfo(uriComponents.getPath());
+		servletRequest.setMethod(fullHttpRequest.method().name().toString());
 
-	@Override
-	public void disconnect(ChannelHandlerContext ctx, ChannelPromise arg1)
-			throws Exception {
-		// FIXME implement me
+		if (uriComponents.getScheme() != null) {
+			servletRequest.setScheme(uriComponents.getScheme());
+		}
+		if (uriComponents.getHost() != null) {
+			servletRequest.setServerName(uriComponents.getHost());
+		}
+		if (uriComponents.getPort() != -1) {
+			servletRequest.setServerPort(uriComponents.getPort());
+		}
+
+		for (CharSequence name : fullHttpRequest.headers().names()) {
+			servletRequest.addHeader(name.toString(), fullHttpRequest.headers().get(name));
+		}
+
+		ByteBuf bbContent = fullHttpRequest.content();
+		if(bbContent.hasArray()) {
+			byte[] baContent = bbContent.array();
+			servletRequest.setContent(baContent);
+		}
+
+		try {
+			if (uriComponents.getQuery() != null) {
+				String query = UriUtils.decode(uriComponents.getQuery(), "UTF-8");
+				servletRequest.setQueryString(query);
+			}
+
+			for (Entry<String, List<String>> entry : uriComponents.getQueryParams().entrySet()) {
+				for (String value : entry.getValue()) {
+					servletRequest.addParameter(
+							UriUtils.decode(entry.getKey(), "UTF-8"),
+							UriUtils.decode(value, "UTF-8"));
+				}
+			}
+		}
+		catch (UnsupportedEncodingException ex) {
+			// shouldn't happen
+		}
+
+		return servletRequest;
 	}
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
 			throws Exception {
-		cause.printStackTrace();
-		ctx.close();
-		
+		log.error(cause.getMessage() , cause);
+		if (ctx.channel().isActive()) {
+			sendError(ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-
-	@Override
-	public void flush(ChannelHandlerContext ctx) throws Exception {
-		// FIXME implement me
+	
+	private static void sendError(ChannelHandlerContext ctx, HttpResponseStatus status) {
+		ByteBuf content = Unpooled.copiedBuffer(
+				"Failure: " + status.toString() + "\r\n",
+				CharsetUtil.UTF_8);
+		FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(
+				HTTP_1_1,
+				status,
+				content
+		);
+		fullHttpResponse.headers().add(CONTENT_TYPE, "text/plain; charset=UTF-8");
+		// Close the connection as soon as the error message is sent.
+		ctx.write(fullHttpResponse).addListener(ChannelFutureListener.CLOSE);
 	}
-
-	@Override
-	public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-		// FIXME implement me
-	}
-
-	@Override
-	public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-		// FIXME implement me
-	}
-
-	@Override
-	public void read(ChannelHandlerContext ctx) throws Exception {
-
-	}
-
-	@Override
-	public void userEventTriggered(ChannelHandlerContext ctx, Object arg1)
-			throws Exception {
-		// FIXME implement me
-	}
-
-	@Override
-	public void write(ChannelHandlerContext ctx, Object arg1,
-			ChannelPromise arg2) throws Exception {
-
-	}
+	
 
 }

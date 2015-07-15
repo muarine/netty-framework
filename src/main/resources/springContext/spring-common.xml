@@ -50,6 +50,9 @@
 
 
 	<util:map id="commonMap" map-class="java.util.HashMap">
+		
+		
+		
 	</util:map>
 	
 </beans>        

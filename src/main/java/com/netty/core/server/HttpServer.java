@@ -2,15 +2,10 @@ package com.netty.core.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpResponseEncoder;
-import io.netty.handler.stream.ChunkedWriteHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,24 +33,7 @@ public class HttpServer {
 			ServerBootstrap b = new ServerBootstrap();
 			b.group(bossGroup,workGroup)
 							.channel(NioServerSocketChannel.class)
-							.childHandler(new ChannelInitializer<SocketChannel>() {
-								@Override
-				                 public void initChannel(SocketChannel ch) throws Exception {
-									// Uncomment the following line if you want HTTPS
-//									SSLEngine engine = SecureChatSslContextFactory.getServerContext().createSSLEngine();
-//									engine.setUseClientMode(false);
-//									ch.pipeline().addLast("ssl", new SslHandler(engine));
-									
-									ch.pipeline().addLast(new HttpRequestDecoder());
-									
-									ch.pipeline().addLast(new HttpResponseEncoder());
-									
-									ch.pipeline().addLast(new ChunkedWriteHandler());
-									
-				                    ch.pipeline().addLast(new DiscardServerHandler());
-				
-				                 }
-							})
+							.childHandler(new DispatcherServletChannelInitializer())
 							.option(ChannelOption.SO_BACKLOG, 128)
 							.childOption(ChannelOption.SO_KEEPALIVE, true);
 			
