@@ -13,12 +13,11 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.netty.muarine.dao.UserMapper;
+import com.netty.core.server.AppContext;
 import com.netty.muarine.entity.User;
 import com.netty.muarine.service.UserService;
 /**
@@ -29,7 +28,7 @@ import com.netty.muarine.service.UserService;
  * @since 0.1
  */
 @ControllerAdvice
-@RestController()
+@RestController
 @RequestMapping("/")
 public class TestController extends BaseController{
 	
@@ -37,6 +36,10 @@ public class TestController extends BaseController{
 	
 	@RequestMapping("/foo")
 	public Map<String,Object> handleFoo() {
+		
+		UserService service = (UserService) AppContext.getInstance().getAppContext().getBean("userService");
+		User user = service.selectUserByNameOrMobile("rtmap");
+		System.out.println(service);
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("map", "hexuan");
 		log.debug("foo");

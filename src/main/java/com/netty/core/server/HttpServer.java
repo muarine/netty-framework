@@ -52,7 +52,7 @@ public class HttpServer {
 	
 	
 	public static void main(String[] args) throws Exception {
-		AppContext.getInstance().getAppContext();
+//		AppContext.getInstance().getAppContext();
 		int port;
 		if(args.length > 0){
 			port = Integer.valueOf(args[0]);
