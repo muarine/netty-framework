@@ -82,7 +82,8 @@ public class DiscardServerHandler extends SimpleChannelInboundHandler<FullHttpRe
 
 		HttpResponseStatus status = HttpResponseStatus.valueOf(servletResponse.getStatus());
 		HttpResponse response = new DefaultHttpResponse(HTTP_1_1, status);
-
+        response.headers().set(CONTENT_TYPE, "text/plain; charset=UTF-8");
+        
 		for (String name : servletResponse.getHeaderNames()) {
 			for (Object value : servletResponse.getHeaderValues(name)) {
 				System.out.println(name + "---" + value);

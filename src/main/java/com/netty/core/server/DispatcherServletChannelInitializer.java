@@ -21,6 +21,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -38,16 +39,15 @@ public class DispatcherServletChannelInitializer extends ChannelInitializer<Sock
 	private final DispatcherServlet dispatcherServlet;
 	
 	public DispatcherServletChannelInitializer() throws ServletException {
-		AppContext.getInstance();
+		
 		MockServletContext servletContext = new MockServletContext();
 		MockServletConfig servletConfig = new MockServletConfig(servletContext);
-
 		AnnotationConfigWebApplicationContext wac = new AnnotationConfigWebApplicationContext();
 		wac.setServletContext(servletContext);
 		wac.setServletConfig(servletConfig);
 		wac.register(WebConfig.class);
+		wac.setConfigLocation("classpath:applicationContext.xml");
 		wac.refresh();
-
 		this.dispatcherServlet = new DispatcherServlet(wac);
 		this.dispatcherServlet.init(servletConfig);
 	}
@@ -72,11 +72,13 @@ public class DispatcherServletChannelInitializer extends ChannelInitializer<Sock
 
 	}
 	
-	
 	@Configuration
 	@EnableWebMvc
-	@ComponentScan(basePackages={"com.netty.muarine.controller"})
+	@EnableTransactionManagement
+	@ComponentScan(basePackages={"com.netty.*.controller"})
 	static class WebConfig extends WebMvcConfigurerAdapter {
+		
+		
 		
 		
 	}

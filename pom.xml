@@ -50,7 +50,6 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
@@ -91,11 +90,40 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.connector.version}</version>
 		</dependency>
+		<!-- 下面两个包 commons-dbcp,commons-pool 是配置数据源的包 -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
-			<version>${tomcat-jdbc}</version>
+			<version>8.0.24</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-api</artifactId>
+			<version>8.0.24</version>
+		</dependency>
+		<dependency>
+	<groupId>org.apache.tomcat</groupId>
+	<artifactId>tomcat-dbcp</artifactId>
+	<version>8.0.24</version>
+</dependency>
+		<dependency>
+	<groupId>tomcat</groupId>
+	<artifactId>tomcat-coyote</artifactId>
+	<version>5.5.23</version>
+</dependency>
+		<dependency>
+	<groupId>org.apache.tomcat</groupId>
+	<artifactId>tomcat-util</artifactId>
+	<version>8.0.24</version>
+</dependency>
+		
 		<!-- common-utils -->
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -174,24 +202,6 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>war</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>
-								${project.build.directory}/${project.artifactId}/lib
-							</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>

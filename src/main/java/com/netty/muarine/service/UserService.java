@@ -20,13 +20,13 @@ import com.netty.muarine.entity.User;
  * @date 2015年7月15日
  * @since 2.0
  */
-@Service
+@Service("userService")
 public class UserService {
 
 	@Autowired
 	private UserMapper userMapper;
 	
-	public User select(String name){
+	public User selectUserByNameOrMobile(String name){
 		return userMapper.selectUserByNameOrMobile(name);
 	}
 	

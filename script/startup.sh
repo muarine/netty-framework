@@ -1,6 +1,6 @@
 #!/bin/bash
 
-APP_HOME=/opt/pc_interface
+APP_HOME=/home/rt/netty-framework
 #JAVA_HOME=/usr/local/java
 
 PRG="$0"
@@ -42,10 +42,10 @@ done
 
 cd $APP_CONF
 
-CLASSPATH=$APP_BIN/pc_interface.jar:$CLASSPATH
+CLASSPATH=$APP_BIN/netty-framework.jar:$CLASSPATH
 
 ulimit -n 10240
 
-$JAVA_HOME/bin/java -Dfile.encoding=UTF-8 -classpath .:$CLASSPATH com.rtmap.promo.app.StartUp INSTANCE 1>$APP_LOG/log.log 2>$APP_LOG/logerror.log &
+$JAVA_HOME/bin/java -Dfile.encoding=UTF-8 -classpath .:$CLASSPATH com.netty.core.server.HttpServer INSTANCE 1>$APP_LOG/log.log 2>$APP_LOG/logerror.log &
 echo $! > $APP_BIN/server.pid
 echo started, pid is : $!
