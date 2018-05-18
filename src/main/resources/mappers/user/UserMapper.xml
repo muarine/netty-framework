@@ -4,11 +4,11 @@
 	
 	<select id="selectUserByNameOrMobile" resultType="com.netty.muarine.entity.User" parameterType="string">
 		select
-			`id`, `realname`, `username`, `mobile`, `password`, `create_time` as createTime
+			`id`, `nickname`, `username`, `password`, `create_time` as createTime
 		from
 			u_user
 		where 
-			username = #{username} or mobile = #{username}
+			username = #{username} or `nickname` = #{username}
 	</select>
 	
 </mapper>

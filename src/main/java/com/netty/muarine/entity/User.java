@@ -23,15 +23,11 @@ public class User implements Serializable {
 	/**
 	 * 真是姓名
 	 */
-	private String realname;
+	private String nickname;
 	/**
 	 * 登录名
 	 */
 	private String username;
-	/**
-	 * 登录名
-	 */
-	private String mobile;
 	/**
 	 * 密码
 	 */
@@ -40,43 +36,56 @@ public class User implements Serializable {
 	 * 创建时间
 	 */
 	private Date createTime;
-	
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getRealname() {
-		return realname;
+
+	public String getNickname() {
+		return nickname;
 	}
-	public void setRealname(String realname) {
-		this.realname = realname;
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
+
 	public String getUsername() {
 		return username;
 	}
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getMobile() {
-		return mobile;
-	}
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
+
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("User{");
+		sb.append("id=").append(id);
+		sb.append(", nickname='").append(nickname).append('\'');
+		sb.append(", username='").append(username).append('\'');
+		sb.append(", password='").append(password).append('\'');
+		sb.append(", createTime=").append(createTime);
+		sb.append('}');
+		return sb.toString();
+	}
 }

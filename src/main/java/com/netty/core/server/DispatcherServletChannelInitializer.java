@@ -14,9 +14,6 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
-
-import javax.servlet.ServletException;
-
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mock.web.MockServletConfig;
@@ -26,6 +23,8 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import javax.servlet.ServletException;
 
 /**
  * DispatcherServletChannelInitializer.
@@ -39,7 +38,7 @@ public class DispatcherServletChannelInitializer extends ChannelInitializer<Sock
 	private final DispatcherServlet dispatcherServlet;
 	
 	public DispatcherServletChannelInitializer() throws ServletException {
-		
+
 		MockServletContext servletContext = new MockServletContext();
 		MockServletConfig servletConfig = new MockServletConfig(servletContext);
 		AnnotationConfigWebApplicationContext wac = new AnnotationConfigWebApplicationContext();

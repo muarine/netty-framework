@@ -7,21 +7,12 @@
  */
 package com.netty.core.server;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
  * ChannelHandler.
@@ -43,9 +34,11 @@ public class ChannelHandler extends ChannelInitializer<SocketChannel>{
 		
 		pipeline.addLast(new HttpObjectAggregator(64*1024));
 		
-		pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
+//		pipeline.addLast(new WebSocketServerProtocolHandler("/ws"));
 		
-		pipeline.addLast(new WebSocketServerHandler(new DefaultChannelGroup(GlobalEventExecutor.INSTANCE)));
+//		pipeline.addLast(new WebSocketServerHandler(new DefaultChannelGroup(GlobalEventExecutor.INSTANCE)));
+
+		pipeline.addLast(new DispatcherHandler());
 	}
 	
 	

@@ -8,18 +8,17 @@
 */
 package com.netty.muarine.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.netty.core.server.AppContext;
+import com.netty.muarine.entity.User;
+import com.netty.muarine.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.netty.core.server.AppContext;
-import com.netty.muarine.entity.User;
-import com.netty.muarine.service.UserService;
+import java.util.HashMap;
+import java.util.Map;
 /**
  * 
  * TestController.
@@ -38,11 +37,10 @@ public class TestController extends BaseController{
 	public Map<String,Object> handleFoo() {
 		
 		UserService service = (UserService) AppContext.getInstance().getAppContext().getBean("userService");
-		User user = service.selectUserByNameOrMobile("rtmap");
-		System.out.println(service);
+		User user = service.selectUserByNameOrMobile("muarine");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("map", "hexuan");
-		log.debug("foo");
+		map.put("user", user);
 		return map;
 	}
 	

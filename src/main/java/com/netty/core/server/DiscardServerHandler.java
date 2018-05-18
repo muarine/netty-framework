@@ -7,9 +7,6 @@
  */
 package com.netty.core.server;
 
-import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
-import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
-import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -24,16 +21,6 @@ import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.stream.ChunkedStream;
 import io.netty.util.CharsetUtil;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Map.Entry;
-
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -41,6 +28,18 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.web.util.UriUtils;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map.Entry;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.*;
+import static io.netty.handler.codec.http.HttpResponseStatus.*;
+import static io.netty.handler.codec.http.HttpVersion.*;
 
 /**
  * DiscardServerHandler.
@@ -82,12 +81,9 @@ public class DiscardServerHandler extends SimpleChannelInboundHandler<FullHttpRe
 
 		HttpResponseStatus status = HttpResponseStatus.valueOf(servletResponse.getStatus());
 		HttpResponse response = new DefaultHttpResponse(HTTP_1_1, status);
-        response.headers().set(CONTENT_TYPE, "text/plain; charset=UTF-8");
-        
 		for (String name : servletResponse.getHeaderNames()) {
 			for (Object value : servletResponse.getHeaderValues(name)) {
-				System.out.println(name + "---" + value);
-				response.headers().addObject((CharSequence)name, value);
+				response.headers().addObject(name, value);
 			}
 		}
 

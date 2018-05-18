@@ -6,7 +6,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,13 +30,17 @@ public class HttpServer {
 		EventLoopGroup workGroup = new NioEventLoopGroup();
 		try {
 			ServerBootstrap b = new ServerBootstrap();
+			// 注册parentGroup和childGroup
 			b.group(bossGroup,workGroup)
-							.channel(NioServerSocketChannel.class)
-//							.childHandler(new DispatcherServletChannelInitializer())
-							.childHandler(new ChannelHandler())
-							.option(ChannelOption.SO_BACKLOG, 65536)
-							.childOption(ChannelOption.SO_KEEPALIVE, true)
-							.childOption(ChannelOption.TCP_NODELAY, true);
+				// 注册channel
+				.channel(NioServerSocketChannel.class)
+				// Dispatch调度 多组subReactor NIO线程 处理read/encode 和 write/decode
+				.childHandler(new DispatcherServletChannelInitializer())
+
+//				.childHandler(new ChannelHandler())
+				.option(ChannelOption.SO_BACKLOG, 65536)
+				.childOption(ChannelOption.SO_KEEPALIVE, true);
+//				.childOption(ChannelOption.TCP_NODELAY, true);
 			
 			// Bind and start to accept incoming connections.
             ChannelFuture f = b.bind(port).sync(); // (7)
@@ -54,7 +57,6 @@ public class HttpServer {
 	
 	
 	public static void main(String[] args) throws Exception {
-//		AppContext.getInstance().getAppContext();
 		int port;
 		if(args.length > 0){
 			port = Integer.valueOf(args[0]);
