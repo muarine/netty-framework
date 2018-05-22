@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--<properties resource="classpath*:db.propertis"/>-->
+
+    <classPathEntry location="/Users/Muarine/Documents/software/maven-3.3.9/repository/mysql/mysql-connector-java/5.1.46/mysql-connector-java-5.1.46.jar"/>
+
+    <context id="MysqlTables" targetRuntime="MyBatis3">
+
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/ma_gateway"
+                        userId="root"
+                        password="123456">
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!--  实体类,example -->
+        <javaModelGenerator targetPackage="com.muarine.gateway.model" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!--mapper  xml-->
+        <sqlMapGenerator targetPackage="mappers" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!--mapper接口-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.muarine.gateway.dao" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table schema="ma_gateway" tableName="mag_api" domainObjectName="Api">
+            <columnOverride column="sign_validate" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="ma_gateway" tableName="mag_app" domainObjectName="App">
+            <columnOverride column="status" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="ma_gateway" tableName="mag_group" domainObjectName="Group">
+            <columnOverride column="is_validate" javaType="java.lang.Integer"/>
+        </table>
+        <table schema="ma_gateway" tableName="mag_invoke_record" domainObjectName="InvokeRecord">
+            <columnOverride column="status" javaType="java.lang.Integer"/>
+        </table>
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,36 @@
+
+spring:
+  datasource:
+    url: jdbc:mysql://10.10.10.235:3306/erp?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: rtmap
+    password: rtmap911
+    #连接池的配置信息
+    druid:
+      username: rtmap
+      password: rtmap911
+      initial-size: 2
+      max-active: 100
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 2000
+          enabled: true
+        config:
+          enabled: true
+        wall:
+          enabled: true
+        encoding:
+          enabled: true
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: admin
