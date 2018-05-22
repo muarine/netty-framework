@@ -7,10 +7,8 @@
  */
 package com.muarine.gateway;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author maoyun@rtmap.com
@@ -19,8 +17,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @date 5/22/18
  */
 @SpringBootApplication
-@MapperScan(basePackages = "com.muarine.gateway.dao")
-@EnableTransactionManagement
+//@MapperScan(basePackages = "com.muarine.gateway.dao")
+//@EnableTransactionManagement
 public class ApiGatewayApplication {
 
 

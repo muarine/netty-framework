@@ -6,7 +6,7 @@ Configuration:
       #测试：-Dlog.level.console=warn -Dlog.level.local=trace
       #生产：-Dlog.level.console=warn -Dlog.level.local=info
       - name: log.level.console
-        value: info
+        value: debug
       - name: log.level.local
         value: info
       - name: log.path

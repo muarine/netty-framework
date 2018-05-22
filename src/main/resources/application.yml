@@ -5,24 +5,24 @@ server:
 spring:
   profiles:
     active: '@env@'
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driverClassName: com.mysql.jdbc.Driver
+#  datasource:
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    driverClassName: com.mysql.jdbc.Driver
   redis:
     host: 10.10.10.235
     port: 30002
     database: 6
 
 # Mybatis配置
-mybatis:
-  type-aliases-package: com.muarine.gateway.model
-  mapper-locations: classpath:mapper/**/*.xml
-  configLocation: classpath:mybatis.xml
-
-#pagehelper
-pagehelper:
-  helper-dialect: mysql
-  reasonable: true
-  supportMethodsArguments: true
-  params: pageNum=pageNum;pageSize=pageSize;count=countSql;
-  row-bounds-with-count: true
+#mybatis:
+#  type-aliases-package: com.muarine.gateway.model
+#  mapper-locations: classpath:mapper/**/*.xml
+#  configLocation: classpath:mybatis.xml
+#
+##pagehelper
+#pagehelper:
+#  helper-dialect: mysql
+#  reasonable: true
+#  supportMethodsArguments: true
+#  params: pageNum=pageNum;pageSize=pageSize;count=countSql;
+#  row-bounds-with-count: true
